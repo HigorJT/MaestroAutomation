@@ -1,0 +1,29 @@
+## VALIDAR QUE NA HOME DO PARCELE NAO APRESENTA A MODAL DE CONTRATACAO PENDENTE
+
+  # Este cenario exige que o wiremock (OBTER ÚLTIMA OFERTA PENDENTE)
+  # seja configurado o status do response para 404
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow: .maestro/common/doLogin.yaml
+---
+
+- assertVisible: O que você deseja fazer?
+- assertVisible: Simular um parcelamento
+- assertVisible: Parcele a sua fatura e fique com as contas em dia
+- assertVisible:
+    id: rightIcon
+    index: 0
+    rightOf: Simular um parcelamento
+- assertVisible: Conferir meu parcelamento
+- assertVisible: Acompanhe o pagamento do seu último Parcele e a liberação do seu limite
+- assertVisible:
+    id: rightIcon
+    index: 1
+    rightOf: Conferir meu parcelamento
+- assertVisible: Minhas simulações (Novo)
+- assertVisible: Consulte suas simulações em aberto e escolha como prefere pagar a entrada
+- assertVisible:
+    id: rightIcon
+    index: 2
+    rightOf: Minhas simulações (Novo)

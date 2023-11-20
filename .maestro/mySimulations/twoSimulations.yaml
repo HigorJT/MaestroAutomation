@@ -1,0 +1,56 @@
+## VALIDAR QUE SÃO EXIBIDOS DOIS CARDS QUANDO O CLIENTE TEM APENAS DUAS SIMULAÇÕES PENDENTES
+
+appId: br.com.carrefour.cartaocarrefour.mock
+env:
+  simulationDueDate: 14/01/2028
+  valueFirstCard: R$ 100,00
+  valueSecondCard: R$ 200,00
+onFlowStart:
+  - runFlow: .maestro/common/doLogin.yaml
+  - tapOn:
+      id: "closeButton"
+  - runFlow:
+      file: .maestro/common/selectMenuOption.yaml
+      env:
+        INDEX: 2
+        TITLE: Minhas simulações (Novo)
+---
+
+- assertVisible: Minhas Simulações
+- assertVisible: Confira as simulações do Parcele Fácil que você já fez e escolha como pagar a entrada para finalizar a contratação
+
+# VALIDAÇÃO DO PRIMEIRO CARD
+- assertVisible:
+    text: Simulação
+    above: ${valueFirstCard}
+- assertVisible:
+    text: Entrada com vencimento em ${simulationDueDate}
+    above: ${valueFirstCard}
+- assertVisible:
+    text: "Valor:"
+    leftOf: ${valueFirstCard}
+- assertVisible: ${valueFirstCard}
+- assertVisible:
+    id: actionButton
+    index: 0
+
+# VALIDAÇÃO DO SEGUNDO CARD
+- assertVisible:
+    text: Simulação
+    above: ${valueSecondCard}
+- assertVisible:
+    text: Entrada com vencimento em ${simulationDueDate}
+    above: ${valueSecondCard}
+- assertVisible:
+    text: "Valor:"
+    leftOf: ${valueSecondCard}
+- assertVisible: ${valueSecondCard}
+- assertVisible:
+    id: actionButton
+    index: 1
+
+# VALIDAR QUE NĀO EXISTE UM TERCEIRO CARD E NEM O BOTÃO "CARREGAR MAIS SIMULAÇÕES"
+- assertNotVisible:
+    id: titleLabelCard
+    index: 2
+- assertNotVisible: "Carregar mais simulações"

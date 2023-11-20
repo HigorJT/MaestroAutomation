@@ -1,0 +1,9 @@
+appId: br.com.carrefour.cartaocarrefour.mock
+---
+- runScript: login.js
+- runScript: onboarding.js
+- runScript: parcele/simulationSummary.js
+- runScript: parcele/homeParcel.js
+- runScript: parcele/trackYourParcel.js
+- runScript: parcele/emptyState.js
+- runScript: parcele/mySimulations.js

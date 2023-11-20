@@ -1,0 +1,37 @@
+appId: br.com.carrefour.cartaocarrefour.mock
+env:
+    CPF: 05322089195
+    PASSWORD: 123123
+onFlowStart:
+  - clearState
+  - launchApp:
+      permissions: { all: deny }
+  - runFlow:
+      when:
+        platform: Android
+      file: ../screens/android/loadElements.yaml
+  - runFlow:
+      when:
+        platform: iOS
+      file: ../screens/iOS/loadElements.yaml
+---
+- runFlow:
+    when:
+      visible: "Permitir localização"
+    commands:
+      - tapOn: "Continuar"
+      - tapOn: "Não permitir"
+- tapOn: ${output.login.loginAppBtn}
+- tapOn:
+    id: ${output.login.cpf}
+- inputText: ${CPF}
+- tapOn:
+    id: ${output.login.password}
+- inputText: ${PASSWORD}
+- tapOn:
+    id: ${output.login.sendBtn}
+- tapOn:
+    id: ${output.onboarding.onboardingJumpBtn}
+- tapOn:
+    id: ${output.onboarding.yesSkipBtn}
+- tapOn: "Parcelar"

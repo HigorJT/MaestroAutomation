@@ -1,0 +1,21 @@
+# VALIDAR QUE A HOME DO PARCELE NAO APRESENTA A MODAL DE CONTRATACAO PENDENTE
+
+  # Este cenario exige que o wiremock seja configurado (mappings/Parcele/parcelefacil_get_pending_offers.json)
+  # O StatusCode do response deve ser 200
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow: .maestro/common/doLogin.yaml
+---
+
+- assertVisible:
+    id: illustration
+- assertVisible: Você tem uma\n contratação pendente
+- assertVisible: Você já fez uma contratação do Parcele, mas ainda não pagou a entrada. Que tal regularizar esse pagamento? Pague a entrada de R$ 164,85 até o dia 14/01/2028 e o restante em 36x de R$ 106,71.
+- tapOn: Detalhes da contratação
+- assertVisible: "Confira a sua simulação"
+- tapOn: "Voltar"
+- tapOn: "Voltar"
+- tapOn: Parcelar
+- tapOn: Fazer nova simulação
+- assertVisible: "O que você quer parcelar?"

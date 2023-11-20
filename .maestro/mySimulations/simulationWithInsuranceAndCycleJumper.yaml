@@ -1,0 +1,36 @@
+## VALIDAR SIMULAÇÃO COM SEGURO E COM PULA CICLO
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow: .maestro/common/doLogin.yaml
+  - runFlow:
+      file: .maestro/common/selectMenuOption.yaml
+      env:
+        INDEX: 2
+        TITLE: Minhas simulações (Novo)
+  - tapOn:
+    id: "actionButton"
+    index: 0
+---
+
+- assertVisible: Confira a sua simulação
+- assertVisible: Valor da entrada
+- assertVisible: R$ 100,00
+- assertVisible: Pagar até 14/01/2028
+- assertVisible: Pague em
+- assertVisible: 36x de R$ 106,71
+- assertVisible: "R$ 106,71 + R$ 0,00 (seguro)"
+- assertVisible: Total a pagar
+- assertVisible: R$ 43.841,48
+- assertVisible: Pagamento da primeira parcela
+- assertVisible: 01/02/2028
+- assertVisible: Prazo estendido para 60 dias
+- scroll
+- assertVisible: IOF - 11,90 reais
+- assertVisible: Taxa de juros - 0,99% ao mês
+- assertVisible: Custo Efetivo Total (CET) - 15,07% ao ano
+- assertVisible: "Data do vencimento da fatura: 01/01"
+- assertVisible: Atenção! Caso a contratação seja feita após o vencimento da fatura, as taxas e encargos de atraso serão cobradas na primeira parcela.
+- assertVisible: Aviso.  Pagamentos através de boleto bancário levam até 5 dias úteis para compensar.
+- assertVisible: Pagar com Pix
+- assertVisible: Pagar com boleto

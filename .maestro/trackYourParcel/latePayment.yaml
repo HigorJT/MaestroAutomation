@@ -1,0 +1,64 @@
+# Validar fluxo de Acompanhamento quando o cliente DLNQ tem uma contratação de Parcele
+
+  # Este cenario exige que o wiremock seja configurado (__files/Parcele/parcelefacil_get_last_active_parcele_success.json)
+  # ResponseBody: {
+  #   "situacaoCliente": 2,
+  #   "numeroTotalParcelas": 24,
+  #   "numeroParcelasRestantes": 19,
+  #   "numeroParcelasPagas": 5,
+  #   "numeroParcelasParaLiberacaoLimite": 0,
+  #   "statusLiberacaoLimite": 0,
+  #   "possuiOutrosParcelesAtivos": false,
+  #   "alerta": {
+  #     "mensagem": "A liberação gradual do seu limite acontece apenas se você fizer os pagamentos em dia e não tiver outro Parcele ativo.",
+  #     "status": "error",
+  #     "tipo": 0
+  #   }
+  # }
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow:
+      when:
+        platform: Android
+      file: ../screens/android/loadElements.yaml
+  - runFlow:
+      when:
+        platform: iOS
+      file: ../screens/iOS/loadElements.yaml
+  - runFlow: ../common/doLogin.yaml
+---
+- tapOn: ${output.homeParcel.btnAcessParcelEasy.text}
+- tapOn:
+    id: ${output.homeParcel.btnNextFlow.id}
+    index: 1
+    rightOf: ${output.homeParcel.lblTitleCard.secondOption.text}
+- assertVisible:
+    text: ${output.trackYourParcel.lblTitleScreen.text}
+    id: ${output.trackYourParcel.lblTitleScreen.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblPaymentOfParcels.text}
+    id: ${output.trackYourParcel.lblPaymentOfParcels.id}
+- assertVisible: ${output.trackYourParcel.progressBar.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblPaidParcels.text}
+    id: ${output.trackYourParcel.lblPaidParcels.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblRemainingParcels.text}
+    id: ${output.trackYourParcel.lblRemainingParcels.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblValueOfParcelsPaid.text}
+    id: ${output.trackYourParcel.lblValueOfParcelsPaid.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblValueOfPaidParcels.text}
+    id: ${output.trackYourParcel.lblValueOfPaidParcels.id}
+- assertNotVisible:
+    text: ${output.trackYourParcel.lblNumberOfInstallmentsRemainingForCardRelease.text}
+    id: ${output.trackYourParcel.lblNumberOfInstallmentsRemainingForCardRelease.id}
+- copyTextFrom:
+    id: ${output.trackYourParcel.lblNotification.id}
+- evalScript: ${const result = maestro.copiedText.includes(output.trackYourParcel.lblNotification.latePayment.text)}
+- assertTrue: ${result}
+- tapOn:
+    id: ${output.trackYourParcel.btnRegularizeYourInvoice.id}
+    containsChild: ${output.trackYourParcel.btnRegularizeYourInvoice.text}

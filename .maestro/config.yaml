@@ -1,0 +1,4 @@
+flows:
+  # - "trackYourParcel/*"
+  # - "homeParcele/*"
+  - "mySimulations/validarMinhasSimulacoesDoisCartoes.yaml"

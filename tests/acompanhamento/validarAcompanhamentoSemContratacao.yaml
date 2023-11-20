@@ -1,0 +1,34 @@
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow:
+      when:
+        platform: Android
+      file: screens/android/loadElements.yaml
+  - runFlow:
+      when:
+        platform: iOS
+      file: screens/iOS/loadElements.yaml
+  - runFlow: helpers/doLogin.yaml
+---
+- tapOn: ${output.homeParcel.btnAcessParcelEasy.text}
+- tapOn:
+    id: ${output.homeParcel.btnNextFlow.id}
+    index: 1
+    rightOf: ${output.homeParcel.lblTitleCard.secondOption.text}
+- assertVisible:
+    id: ${output.emptyState.imgScreen.id}
+- assertVisible:
+    text: ${output.emptyState.lblTitleScreen.trackYourParcel.text}
+    id: ${output.emptyState.lblTitleScreen.id}
+- assertVisible:
+    text: ${output.emptyState.lblSubTitleScreen.text}
+    id: ${output.emptyState.lblSubTitleScreen.id}
+- tapOn:
+    id: ${output.emptyState.btnScreen.id}
+    containsChild: ${output.emptyState.btnScreen.text}
+- assertVisible:
+    text: "Passo 1 de 5"
+    id: "subTitleLabel"
+- assertVisible:
+    text: "O que você quer parcelar?"
+    id: "titleLabel"

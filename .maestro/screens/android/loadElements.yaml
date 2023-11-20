@@ -1,0 +1,5 @@
+appId: br.com.carrefour.cartaocarrefour.homolog
+---
+- runScript: login.js
+- runScript: onboarding.js
+- runScript: parcele/homeParcel.js

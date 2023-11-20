@@ -1,0 +1,18 @@
+## VALIDAR QUE NÃO É EXIBIDO NENHUMA CONTRATAÇÃO DE PARCELE
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow: .maestro/common/doLogin.yaml
+  - runFlow:
+      file: .maestro/common/selectMenuOption.yaml
+      env:
+        INDEX: 1
+        TITLE: Conferir meu parcelamento
+---
+
+- assertVisible:
+    id: illustration
+- assertVisible: Você ainda não possui nenhum parcelamento ativo.
+- assertVisible: Faça uma simulação do Parcelamento e fique com as contas em dia.
+- tapOn: Simular um parcelamento
+- assertVisible: O que você quer parcelar?

@@ -1,0 +1,74 @@
+# Validar fluxo de Acompanhamento quando o cliente NRPP tem o limite liberado
+
+  # Este cenario exige que o wiremock seja configurado (__files/Parcele/parcelefacil_get_last_active_parcele_success.json)
+  # ResponseBody: {
+  #   "situacaoCliente": 0,
+  #   "numeroTotalParcelas": 24,
+  #   "numeroParcelasRestantes": 19,
+  #   "numeroParcelasPagas": 5,
+  #   "numeroParcelasParaLiberacaoLimite": 0,
+  #   "statusLiberacaoLimite": 2,
+  #   "possuiOutrosParcelesAtivos": false,
+  #   "alerta": {
+  #     "mensagem": "A liberação gradual do seu limite acontece apenas se você fizer os pagamentos em dia e não tiver outro Parcele ativo.",
+  #     "status": "warning",
+  #     "tipo": 0
+  #   }
+  # }
+
+appId: br.com.carrefour.cartaocarrefour.mock
+onFlowStart:
+  - runFlow:
+      when:
+        platform: Android
+      file: ../screens/android/loadElements.yaml
+  - runFlow:
+      when:
+        platform: iOS
+      file: ../screens/iOS/loadElements.yaml
+  - runFlow: ../common/doLogin.yaml
+---
+- tapOn: ${output.homeParcel.btnAcessParcelEasy.text}
+- tapOn:
+    id: ${output.homeParcel.btnNextFlow.id}
+    index: 1
+    rightOf: ${output.homeParcel.lblTitleCard.secondOption.text}
+- assertNotVisible:
+    text: ${output.trackYourParcel.lblTitleScreen.text}
+    id: ${output.trackYourParcel.lblTitleScreen.id}
+- assertVisible:
+    id: ${output.trackYourParcel.imgCardReleased.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblTitleCardReleased.text}
+    id: ${output.trackYourParcel.lblTitleCardReleased.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblDescriptionCardReleased.text}
+    id: ${output.trackYourParcel.lblDescriptionCardReleased.id}
+- assertVisible: ${output.trackYourParcel.progressBar.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblPaymentOfParcels.text}
+    id: ${output.trackYourParcel.lblPaymentOfParcels.id}
+- assertVisible: ${output.trackYourParcel.progressBar.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblPaidParcels.text}
+    id: ${output.trackYourParcel.lblPaidParcels.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblRemainingParcels.text}
+    id: ${output.trackYourParcel.lblRemainingParcels.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblValueOfParcelsPaid.text}
+    id: ${output.trackYourParcel.lblValueOfParcelsPaid.id}
+- assertVisible:
+    text: ${output.trackYourParcel.lblValueOfPaidParcels.text}
+    id: ${output.trackYourParcel.lblValueOfPaidParcels.id}
+- assertNotVisible:
+    text: ${output.trackYourParcel.lblNumberOfInstallmentsRemainingForCardRelease.text}
+    id: ${output.trackYourParcel.lblNumberOfInstallmentsRemainingForCardRelease.id}
+- assertNotVisible:
+    id: ${output.trackYourParcel.lblNotification.id}
+- tapOn:
+    id: ${output.trackYourParcel.btnReturnToHomeScreen.id}
+    containsChild: ${output.trackYourParcel.btnReturnToHomeScreen.text}
+- assertVisible:
+    text: ${output.homeParcel.lblTitleScreen.text}
+    id: ${output.homeParcel.lblTitleScreen.id}

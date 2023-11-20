@@ -1,0 +1,19 @@
+appId: br.com.carrefour.cartaocarrefour.homolog
+---
+
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "RIGHT_ICON_TAG"
+          index: ${INDEX}
+          rightOf: ${TITLE}
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          id: "rightIcon"
+          index: ${INDEX}
+          rightOf: ${TITLE}
